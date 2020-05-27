@@ -8,7 +8,9 @@ Exemplo de implementação de controle para jogos 3D em Primeira Pessoa
 
 Link para a vídeo-aula: https://youtu.be/ShHSFAAOBx0
 
-# O melhor curso de programação das galáxias!
+## Servidor do Discord
+
+Dúvidas? Procure ajuda no nosso Discord: https://discord.gg/kEjJ8ax
 
 ## Modo de uso desse repositório
 
