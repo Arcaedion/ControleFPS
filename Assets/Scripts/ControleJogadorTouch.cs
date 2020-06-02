@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CharacterController))]
-public class ControleJogador : MonoBehaviour
+public class ControleJogadorTouch : MonoBehaviour
 {
-    [Header("Configuração de Camera")]
+   [Header("Configuração de Camera")]
     [SerializeField]
     private Transform _posicaoCamera;
 
