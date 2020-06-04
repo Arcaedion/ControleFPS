@@ -2,12 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CharacterController))]
 public class ControleJogadorTouch : MonoBehaviour
 {
-   [Header("Configuração de Camera")]
+    [Header("Configuração de Camera")]
     [SerializeField]
     private Transform _posicaoCamera;
 
@@ -34,6 +33,9 @@ public class ControleJogadorTouch : MonoBehaviour
     private bool _estaChao;
     private float _estaChaoTimer;
 
+    [SerializeField] private Joystick _joystickMove;
+    [SerializeField] private Joystick _joystickLook;
+
     void Start()
     {
         _controle = GetComponent<CharacterController>();
@@ -45,7 +47,7 @@ public class ControleJogadorTouch : MonoBehaviour
     void Update()
     {
         var estaPulando = Input.GetButtonDown("Jump");
-        var movimentoInput = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        var movimentoInput = new Vector3(_joystickMove.Horizontal, 0, _joystickMove.Vertical);
         var estaCorrendo = Input.GetButton("Run");
 
         AplicaPulo(estaPulando);
@@ -90,28 +92,33 @@ public class ControleJogadorTouch : MonoBehaviour
 
     private void AplicaCameraY()
     {
-        var giraCamera = -Input.GetAxis("Mouse Y");
-        giraCamera *= _sensibilidadeMouse;
-        _anguloVertical = Mathf.Clamp(giraCamera + _anguloVertical, -89f, 89f);
-        var angulosAtuais = _posicaoCamera.transform.localEulerAngles;
-        angulosAtuais.x = _anguloVertical;
-        _posicaoCamera.transform.localEulerAngles = angulosAtuais;
+        if(Math.Abs(_joystickLook.Vertical) > 0.2)
+        {
+            var giraCamera = - _joystickLook.Vertical/4;
+            giraCamera *= _sensibilidadeMouse;
+            _anguloVertical = Mathf.Clamp(giraCamera + _anguloVertical, -89f, 89f);
+            var angulosAtuais = _posicaoCamera.transform.localEulerAngles;
+            angulosAtuais.x = _anguloVertical;
+            _posicaoCamera.transform.localEulerAngles = angulosAtuais;
+        }
     }
 
     private void AplicaCameraX()
     {
-        var viraJogador = Input.GetAxis("Mouse X") * _sensibilidadeMouse;
-        _anguloHorizontal += viraJogador;
+        if(Math.Abs(_joystickLook.Horizontal) > 0.2)
+        {
+            var viraJogador = _joystickLook.Horizontal*2;
+            _anguloHorizontal += viraJogador;
 
-        if(_anguloHorizontal > 360)
-            _anguloHorizontal -= 360f;
-        if(_anguloHorizontal < 0)
-        _anguloHorizontal += 360f;
+            if(_anguloHorizontal > 360)
+                _anguloHorizontal -= 360f;
+            if(_anguloHorizontal < 0)
+            _anguloHorizontal += 360f;
 
-        var angulosAtuais = transform.localEulerAngles;
-        angulosAtuais.y = _anguloHorizontal;
-        transform.localEulerAngles = angulosAtuais;
-
+            var angulosAtuais = transform.localEulerAngles;
+            angulosAtuais.y = _anguloHorizontal;
+            transform.localEulerAngles = angulosAtuais;
+        }
     }
 
     private void AplicaMovimento(Vector3 movimentoInput, bool correndo)
